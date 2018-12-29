@@ -34,11 +34,13 @@ app.post('/todos',(req,res)=>{
 });
 
 app.get('/todos',(req,res)=>{
-    Todo.find({},'text completed').then((todos)=>{
+    Todo.find({}).then((todos)=>{
         res.send({
-            todos
+            todos,
+            code: 'test data'
         });
     },(err)=>{
+        //fires when promise gets rejected
         console.log('unable to get data ',err);
         res.status(400).send(err);
     });
@@ -98,8 +100,6 @@ app.get('/api/icons', function(req, res) {
         console.log('unable to get data ',err);
         res.status(400).send(err);
     });
-    
-   // res.end(data);
 });
 
 app.post('/api/redirect', function(req, res) {
