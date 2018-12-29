@@ -27,25 +27,25 @@ MongoClient.connect('mongodb://localhost:27019/TodoApp',(err,db)=>{
     //     console.log('Something went wrong unable to fetch ',err);
     // });
     
-    // db.collection('Icons').findOne({
-    //     _id:new ObjectID('5c14b0cec49faf72d0929576')
-    // },(err,doc)=>{
-    //     if(err){
-    //         return console.log('unable to reterieve icons');
-    //     }
-    //     fs.writeFile('test-124.png', doc.obj.buffer, function(err){
-    //         if (err) throw err;
-    //         console.log('Sucessfully reterieved!');
-    //     })
-    // });
+    db.collection('icons').findOne({
+        _id:new ObjectID('5c153e37b9a05dad110d875b')
+    },(err,doc)=>{
+        if(err){
+            return console.log('unable to reterieve icons');
+        }
+        fs.writeFile('test-101.png', doc.data.buffer, function(err){
+            if (err) throw err;
+            console.log('Sucessfully reterieved!');
+        })
+    });
 
-    db.collection('Users').find({name:'Isha'}).count().then((count)=>{
-        console.log(`Users count: ${count}`);
-    }, (err)=>{
-        console.log('Something went wrong unable to fetch ',err);
-    });
-    db.collection('Users').find({name:'Akshat'}).toArray().then((docs)=>{
-        console.log(JSON.stringify(docs,undefined,2));
-    });
+    // db.collection('Users').find({name:'Isha'}).count().then((count)=>{
+    //     console.log(`Users count: ${count}`);
+    // }, (err)=>{
+    //     console.log('Something went wrong unable to fetch ',err);
+    // });
+    // db.collection('Users').find({name:'Akshat'}).toArray().then((docs)=>{
+    //     console.log(JSON.stringify(docs,undefined,2));
+    // });
     //db.close();
 });

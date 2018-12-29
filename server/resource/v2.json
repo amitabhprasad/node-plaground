@@ -1,0 +1,468 @@
+{
+    "service": {
+      "specVersion": "v2",
+      "catalog_metadata": {
+        "name": "MyStockManagerApp",
+        "description": "Manage all your stock from a single screen without hassle, end to end solution deployed in one touch",
+        "longDescription": "Worried about your stock portfolio, unable to find a secured ",
+        "providerDisplayName": "",
+        "image": "serviceicon_1.svg",
+        "category": "Application Services",
+        "bullets": [
+          {
+            "title": "StockManager",
+            "description": "App to Manage Stocks"
+          }
+        ],
+        "author": "admin"
+      },
+      "tags": [],
+      "parameters": [
+        {
+          "name": "Topology",
+          "label": "Topology",
+          "customtype": "string",
+          "type": "string",
+          "immutable": false,
+          "hidden": false,
+          "required": true,
+          "secured": false,
+          "options": [
+            {
+              "value": "development",
+              "label": "development"
+            },
+            {
+              "value": "production",
+              "label": "production"
+            }
+          ]
+        }
+      ],
+      "flow": {
+        "conditions": [
+          {
+            "decision": {
+              "title": "decision",
+              "options": [
+                {
+                  "case": "development",
+                  "sequence": {
+                    "0": "createpv02a2968b",
+                    "1": "ibmchart5d453589",
+                    "2": "waitforpe91739ff",
+                    "3": "db2confi3d63d08f"
+                  }
+                },
+                {
+                  "case": "production",
+                  "sequence": {
+                    "0": "ibmdb2en19c7ad6c",
+                    "1": "db2vmcon245c30b3"
+                  }
+                }
+              ],
+              "id": "decisione0ff89dd",
+              "mapped_parameter": "${parameters.Topology}"
+            }
+          }
+        ],
+        "templates": [
+          {
+            "createPV": {
+              "title": "createPV",
+              "template_name": "createPV",
+              "version": "v1.0.0",
+              "id": "createpv02a2968b",
+              "template_type": "Terraform",
+              "template_content_type": "Other",
+              "template_provider": "Other",
+              "instance_name": "dbpv",
+              "cloud_connection_name": "Other",
+              "template_data_objects": {},
+              "template_params": {
+                "pvname": "dbpvtemp",
+                "pvsize": "20",
+                "root_password": "",
+                "serverip": ""
+              },
+              "outputs": []
+            }
+          },
+          {
+            "ibm-charts/ibm-db2oltp-dev": {
+              "title": "ibm-charts/ibm-db2oltp-dev",
+              "template_name": "ibm-db2oltp-dev",
+              "version": "2.0.0",
+              "id": "ibmchart5d453589",
+              "template_type": "Helm",
+              "template_content_type": "IBM Cloud Private",
+              "template_provider": "IBM Cloud Private",
+              "instance_name": "db",
+              "cloud_connection_name": "LocalICP",
+              "template_dataobjects": {},
+              "template_params": {
+                "namespace": "default",
+                "global-image-secretName": "dockerdb",
+                "arch": "amd64",
+                "image-repository": "store/ibmcorp/db2_developer_c",
+                "image-tag": "11.1.3.3",
+                "image-pullPolicy": "IfNotPresent",
+                "service-name": "ibm-db2oltp-dev",
+                "service-type": "NodePort",
+                "service-port": 50000,
+                "service-tsport": 55000,
+                "db2inst-instname": "db2inst1",
+                "db2inst-password": "",
+                "options-databaseName": "trader",
+                "options-oracleCompatibility": "false",
+                "persistence-enabled": true,
+                "persistence-useDynamicProvisioning": "",
+                "hadr-enabled": "",
+                "hadr-useDynamicProvisioning": "",
+                "dataVolume-name": "data-stor",
+                "dataVolume-existingClaimName": "",
+                "dataVolume-storageClassName": "",
+                "dataVolume-size": "20Gi",
+                "etcdVolume-name": "etcd-stor",
+                "etcdVolume-storageClassName": "",
+                "etcdVolume-size": "1Gi",
+                "hadrVolume-name": "hadr-stor",
+                "hadrVolume-existingClaimName": "",
+                "hadrVolume-storageClassName": "",
+                "hadrVolume-size": "1Gi",
+                "resources-requests-memory": "2Gi",
+                "resources-requests-cpu": "1000m",
+                "resources-limits-memory": "16Gi",
+                "resources-limits-cpu": "2000m"
+              },
+              "outputs": []
+            }
+          },
+          {
+            "WaitForPod": {
+              "title": "WaitForPod",
+              "template_name": "WaitForPod",
+              "version": "v1.0.0",
+              "id": "waitforpe91739ff",
+              "template_type": "Terraform",
+              "template_content_type": "Other",
+              "template_provider": "Other",
+              "instance_name": "waitfordb",
+              "cloud_connection_name": "Other",
+              "template_data_objects": {},
+              "template_params": {
+                "host": "",
+                "namespace": "default",
+                "root_password": ""
+              },
+              "outputs": []
+            }
+          },
+          {
+            "DB2Config": {
+              "title": "DB2Config",
+              "template_name": "DB2Config",
+              "version": "v1.0.0",
+              "id": "db2confi3d63d08f",
+              "template_type": "Terraform",
+              "template_content_type": "Other",
+              "template_provider": "Other",
+              "instance_name": "dbconfig",
+              "cloud_connection_name": "Other",
+              "template_data_objects": {},
+              "template_params": {
+                "db_password": "",
+                "db_user": "db2inst1",
+                "dbname": "trader",
+                "host": "",
+                "root_password": ""
+              },
+              "outputs": []
+            }
+          },
+          {
+            "IBM DB2 Enterprise Server Edition V10.5 on a single virtual machine": {
+              "title": "IBM DB2 Enterprise Server Edition V10.5 on a single virtual machine",
+              "template_name": "IBM DB2 Enterprise Server Edition V10.5 on a single virtual machine - VMware vSphere",
+              "version": "2.0",
+              "id": "ibmdb2en19c7ad6c",
+              "template_type": "Terraform",
+              "template_content_type": "VMware vSphere",
+              "template_provider": "VMware vSphere",
+              "instance_name": "dbconfigexternal",
+              "cloud_connection_name": "Stoddard-VCenter",
+              "template_data_objects": {
+                "advanced_content_runtime_chef": "camc-vmware-octravis"
+              },
+              "template_params": {
+                "DB2Node01_db2_das_password": "",
+                "DB2Node01_db2_das_username": "db2das1",
+                "DB2Node01_db2_instances_instance1_databases_database1_codeset": "UTF-8",
+                "DB2Node01_db2_instances_instance1_databases_database1_db_collate": "SYSTEM",
+                "DB2Node01_db2_instances_instance1_port": "50000",
+                "DB2Node01_db2_instances_instance1_databases_database1_db_data_path": "/home/db2inst1",
+                "DB2Node01_db2_instances_instance1_databases_database1_db_name": "db01",
+                "DB2Node01_db2_instances_instance1_databases_database1_db_path": "/home/db2inst1",
+                "DB2Node01_db2_instances_instance1_databases_database1_database_users_db_user1_user_gid": "dbgroup1",
+                "DB2Node01_db2_instances_instance1_databases_database1_database_users_db_user1_user_name": "dbuser1",
+                "DB2Node01_db2_instances_instance1_databases_database1_database_users_db_user1_user_password": "",
+                "DB2Node01_db2_instances_instance1_fenced_groupname": "db2fenc1",
+                "DB2Node01_db2_instances_instance1_fenced_password": "",
+                "DB2Node01_db2_instances_instance1_fenced_username": "db2fenc1",
+                "DB2Node01_db2_fp_version": "10.5.0.9",
+                "DB2Node01_db2_install_dir": "/opt/ibm/db2/V10.5",
+                "DB2Node01_db2_instances_instance1_instance_dir": "/home/db2inst1",
+                "DB2Node01_db2_instances_instance1_instance_groupname": "db2iadm1",
+                "DB2Node01_db2_instances_instance1_instance_password": "",
+                "DB2Node01_db2_instances_instance1_instance_username": "db2inst1",
+                "DB2Node01_db2_instances_instance1_databases_database1_pagesize": "4096",
+                "DB2Node01_db2_instances_instance1_databases_database1_territory": "US",
+                "DB2Node01_dns_servers": "",
+                "DB2Node01_dns_suffixes": "",
+                "DB2Node01_domain": "",
+                "DB2Node01-image": "",
+                "DB2Node01-os_admin_user": "",
+                "DB2Node01-os_password": "",
+                "DB2Node01_root_disk_size": "100",
+                "DB2Node01-name": "",
+                "DB2Node01_root_disk_datastore": "",
+                "DB2Node01_ipv4_gateway": "",
+                "DB2Node01_ipv4_address": "",
+                "DB2Node01_memory": 4096,
+                "DB2Node01_ipv4_prefix_length": "",
+                "DB2Node01_number_of_vcpu": 2,
+                "DB2Node01_network_interface_label": "",
+                "DB2Node01_cluster": "",
+                "DB2Node01_datacenter": "",
+                "DB2Node01_folder": "",
+                "DB2Node01_adapter_type": "vmxnet3",
+                "DB2Node01_resource_pool": "",
+                "user_public_ssh_key": "None"
+              },
+              "outputs": [
+                "DB2Node01_ip",
+                "DB2Node01_name",
+                "DB2Node01_roles",
+                "stack_id"
+              ]
+            }
+          },
+          {
+            "DB2ConfigExternal": {
+              "title": "DB2ConfigExternal",
+              "template_name": "DB2ConfigExternal",
+              "version": "v1.0.0",
+              "id": "db2vmcon245c30b3",
+              "template_type": "Terraform",
+              "template_content_type": "Other",
+              "template_provider": "Other",
+              "instance_name": "externalDB2",
+              "cloud_connection_name": "Other",
+              "template_data_objects": {},
+              "template_params": {
+                "db_password": "",
+                "db_user": "db2inst1",
+                "dbname": "trader",
+                "host": "",
+                "root_password": ""
+              },
+              "outputs": []
+            }
+          },
+          {
+            "ibm-charts/ibm-mqadvanced-server-dev": {
+              "title": "ibm-charts/ibm-mqadvanced-server-dev",
+              "template_name": "ibm-mqadvanced-server-dev",
+              "version": "1.2.1",
+              "id": "ibmchart72d6de7a",
+              "template_type": "Helm",
+              "template_content_type": "IBM Cloud Private",
+              "template_provider": "IBM Cloud Private",
+              "instance_name": "mq",
+              "cloud_connection_name": "LocalICP",
+              "template_dataobjects": {},
+              "template_params": {
+                "namespace": "default",
+                "license": "accept",
+                "image-repository": "ibmcom/mq",
+                "image-tag": 9,
+                "image-pullSecret": "",
+                "image-pullPolicy": "IfNotPresent",
+                "persistence-enabled": true,
+                "persistence-useDynamicProvisioning": true,
+                "dataPVC-name": "data",
+                "dataPVC-storageClassName": "",
+                "dataPVC-size": "2Gi",
+                "service-name": "qmgr",
+                "service-type": "NodePort",
+                "resources-limits-cpu": "500m",
+                "resources-limits-memory": "512Mi",
+                "resources-requests-cpu": "500m",
+                "resources-requests-memory": "512Mi",
+                "queueManager-name": "qm1",
+                "queueManager-dev-adminPassword": "",
+                "queueManager-dev-appPassword": "",
+                "nameOverride": "ibm-mq",
+                "livenessProbe-initialDelaySeconds": 60,
+                "livenessProbe-periodSeconds": 10,
+                "livenessProbe-timeoutSeconds": 5,
+                "livenessProbe-failureThreshold": 1,
+                "readinessProbe-initialDelaySeconds": 10,
+                "readinessProbe-periodSeconds": 5,
+                "readinessProbe-timeoutSeconds": 3,
+                "readinessProbe-failureThreshold": 1,
+                "log-format": "basic"
+              },
+              "outputs": []
+            }
+          },
+          {
+            "WaitForPod": {
+              "title": "WaitForPod",
+              "template_name": "WaitForPod",
+              "version": "v1.0.0",
+              "id": "waitforpbb26660b",
+              "template_type": "Terraform",
+              "template_content_type": "Other",
+              "template_provider": "Other",
+              "instance_name": "waitformq",
+              "cloud_connection_name": "Other",
+              "template_data_objects": {},
+              "template_params": {
+                "host": "",
+                "namespace": "default",
+                "root_password": ""
+              },
+              "outputs": []
+            }
+          },
+          {
+            "MQConfig": {
+              "title": "MQConfig",
+              "template_name": "MQConfig",
+              "version": "v1.0.0",
+              "id": "configur5c28d38f",
+              "template_type": "Terraform",
+              "template_content_type": "Other",
+              "template_provider": "Other",
+              "instance_name": "mqconfig",
+              "cloud_connection_name": "Other",
+              "template_data_objects": {},
+              "template_params": {
+                "host": "",
+                "qlocal": "NotificationQ",
+                "qmgr": "qm1",
+                "root_password": ""
+              },
+              "outputs": []
+            }
+          },
+          {
+            "Secrets": {
+              "title": "Secrets",
+              "template_name": "Secrets",
+              "version": "v1.0.0",
+              "id": "createse873dcf03",
+              "template_type": "Terraform",
+              "template_content_type": "Other",
+              "template_provider": "Other",
+              "instance_name": "secrets",
+              "cloud_connection_name": "Other",
+              "template_data_objects": {},
+              "template_params": {
+                "host": "",
+                "root_password": ""
+              },
+              "outputs": []
+            }
+          },
+          {
+            "local-charts/trader": {
+              "title": "local-charts/trader",
+              "template_name": "trader",
+              "version": "0.1.0",
+              "id": "localcha1a3fff48",
+              "template_type": "Helm",
+              "template_content_type": "IBM Cloud Private",
+              "template_provider": "IBM Cloud Private",
+              "instance_name": "trader",
+              "cloud_connection_name": "LocalICP",
+              "template_dataobjects": {},
+              "template_params": {
+                "namespace": "default",
+                "loyaltyLevel-image-repository": "ibmstocktrader/loyalty-level",
+                "loyaltyLevel-image-tag": "latest",
+                "loyaltyLevel-image-pullPolicy": "IfNotPresent",
+                "portfolio-image-repository": "ibmstocktrader/portfolio",
+                "portfolio-image-tag": "classic",
+                "portfolio-image-pullPolicy": "IfNotPresent",
+                "stockQuote-image-repository": "ibmstocktrader/stock-quote",
+                "stockQuote-image-tag": "latest",
+                "stockQuote-image-pullPolicy": "IfNotPresent",
+                "trader-image-repository": "ibmstocktrader/trader",
+                "trader-image-tag": "classic",
+                "trader-image-pullPolicy": "IfNotPresent",
+                "tradr-image-repository": "ibmstocktrader/tradr",
+                "tradr-image-tag": "classic",
+                "tradr-image-pullPolicy": "IfNotPresent",
+                "messaging-image-repository": "ibmstocktrader/messaging",
+                "messaging-image-tag": "latest",
+                "messaging-image-pullPolicy": "IfNotPresent",
+                "notificationTwitter-image-repository": "ibmstocktrader/notification-twitter",
+                "notificationTwitter-image-tag": "latest",
+                "notificationTwitter-image-pullPolicy": "IfNotPresent"
+              },
+              "outputs": []
+            }
+          }
+        ],
+        "resthooks": [],
+        "notifications": [],
+        "sequence": {
+          "0": "decisione0ff89dd",
+          "1": "ibmchart72d6de7a",
+          "2": "waitforpbb26660b",
+          "3": "configur5c28d38f",
+          "4": "createse873dcf03",
+          "5": "localcha1a3fff48"
+        }
+      },
+      "plans": [
+        {
+          "name": "Development",
+          "description": "Deploy latest in development version to try out new features",
+          "plan_parameters": [
+            {
+              "name": "Topology",
+              "label": "Topology",
+              "customtype": "string",
+              "type": "string",
+              "immutable": true,
+              "hidden": true,
+              "required": true,
+              "secured": false,
+              "default": "development"
+            }
+          ]
+        },
+        {
+          "name": "Production",
+          "description": "Deploy stable App ready to consumed for all",
+          "plan_parameters": [
+            {
+              "name": "Topology",
+              "label": "Topology",
+              "customtype": "string",
+              "type": "string",
+              "immutable": true,
+              "hidden": true,
+              "required": true,
+              "secured": false,
+              "default": "production"
+            }
+          ]
+        }
+      ]
+    }
+  }
